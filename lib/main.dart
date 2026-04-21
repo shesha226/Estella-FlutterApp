@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'package:provider/provider.dart';
+import 'viewmodels/onboarding_view_model.dart';
+import 'views/onboarding_screen.dart';
 
 void main() {
-  runApp(EstellaApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => OnboardingViewModel())],
+      child: MyApp(),
+    ),
+  );
 }
 
-class EstellaApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: OnboardingView(),
+    );
   }
 }

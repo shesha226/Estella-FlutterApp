@@ -1,42 +1,57 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/login_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LogingViewModel(),
+      create: (_) => LoginViewModel(),
       child: Scaffold(
-        body: Consumer<LogingViewModel>(
+        body: Consumer<LoginViewModel>(
           builder: (context, viewModel, child) {
             return Stack(
               children: [
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/login_background.jpg'),
+                      image: AssetImage(
+                        'assets/images/Gemini_Generated_Image_556xtz556xtz556x.png',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                Container(color: Colors.black.withOpacity(0.3)),
+                Container(color: Colors.black.withValues(alpha: 0.3)),
+
                 Padding(
                   padding: const EdgeInsets.all(32.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Estella', style: TextStyle(fontSize: 48, color: Colors.white, fontWeight: FontWeight.bold)),
-                      Text('Login', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 60),
+                      Text(
+                        'Estella',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 48,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 250),
                       _buildTextField(Icons.person, 'Username', false),
-                      _buildPasswordField(Icons.lock, 'Password', false),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 30),
+                      _buildPasswordField(viewModel, 'Password'),
+                      const SizedBox(height: 20),
                       _buildRememberMeRow(),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildLogingButton(context, viewModel),
-                      SizedBox(height: 20),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildSignupLink(context),
                     ],
                   ),
@@ -55,16 +70,33 @@ class LoginScreen extends StatelessWidget {
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         hintText: hint,
+        filled: true,
+        fillColor: Colors.white.withValues(alpha: 0.8),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
 
-  Widget _buildPasswordField(IconData icon, String hint, bool obscure) {
+  Widget _buildPasswordField(LoginViewModel viewModel, String hint) {
     return TextField(
-      obscureText: true,
+      obscureText: viewModel.isPasswordObscure,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon),
+        prefixIcon: const Icon(Icons.lock),
         hintText: hint,
+        filled: true,
+        fillColor: Colors.white.withValues(alpha: 0.8),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+
+        suffixIcon: IconButton(
+          icon: Icon(
+            viewModel.isPasswordObscure
+                ? Icons.visibility_off
+                : Icons.visibility,
+          ),
+          onPressed: () {
+            viewModel.togglePasswordVisibility();
+          },
+        ),
       ),
     );
   }
@@ -73,24 +105,47 @@ class LoginScreen extends StatelessWidget {
     return Row(
       children: [
         Checkbox(value: false, onChanged: (value) {}),
-        Text('Remember me'),
+        const Text('Remember me', style: TextStyle(color: Colors.white)),
       ],
     );
   }
 
-  Widget _buildLogingButton(BuildContext context, LogingViewModel viewModel) {
+  Widget _buildLogingButton(BuildContext context, LoginViewModel viewModel) {
     return ElevatedButton(
-      onPressed: () {},
-      child: Text('Login'),
+      onPressed: () {
+        viewModel.login(context);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFEB0000),
+        foregroundColor: Colors.white,
+        fixedSize: const Size(270, 45),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: const Text('Login'),
     );
   }
 
   Widget _buildSignupLink(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterScreen()));
-      },
-      child: Text('Sign up'),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Don\'t have an account?',
+          style: TextStyle(color: Colors.white),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RegisterScreen()),
+            );
+          },
+          child: const Text(
+            ' Sign Up',
+            style: TextStyle(color: Colors.lightBlueAccent),
+          ),
+        ),
+      ],
     );
   }
 }

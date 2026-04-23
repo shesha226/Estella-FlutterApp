@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../viewmodels/onboarding_view_model.dart';
+import 'login_screen.dart'; // LoginScreen එක තියෙන තැන හරියට import කරගන්න
 
 class OnboardingView extends StatelessWidget {
-  final OnboardingViewModel viewModel = OnboardingViewModel();
+  const OnboardingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    // Provider එකෙන් ViewModel එක ගන්නවා
+    final viewModel = Provider.of<OnboardingViewModel>(context);
 
     return Scaffold(
       body: Stack(
         children: [
+          // Background Image
           Positioned(
             top: 0,
             left: 0,
@@ -58,9 +62,19 @@ class OnboardingView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Get Started Button
+
+                    // GET STARTED BUTTON
                     GestureDetector(
-                      onTap: () => viewModel.startApp(context),
+                      onTap: () {
+                        // මෙන්න මෙතන තමයි මැජික් එක වෙන්නේ!
+                        // ViewModel එකට යන්නේ නැතුව කෙලින්ම Navigate කරමු
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 50,

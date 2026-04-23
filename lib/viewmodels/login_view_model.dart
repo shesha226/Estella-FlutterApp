@@ -1,19 +1,21 @@
+import 'package:estella/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/login_model.dart';
+import '../views/login_screen.dart';
 
-class LogingViewModel extends ChangeNotifier {
-  bool _isObscure = true;
-  bool get isObscure => _isObscure;
+class LoginViewModel extends ChangeNotifier {
+  bool _isPasswordObscure = true;
+  bool get isPasswordObscure => _isPasswordObscure;
 
   void togglePasswordVisibility() {
-    _isObscure = !_isObscure;
+    _isPasswordObscure = !_isPasswordObscure;
     notifyListeners();
   }
 
-  void loginavigate(BuildContext context) {
+  void login(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
     );
   }
 }

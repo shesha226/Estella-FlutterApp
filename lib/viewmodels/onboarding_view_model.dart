@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/onboarding_model.dart';
+import '../views/login_screen.dart';
 
 class OnboardingViewModel extends ChangeNotifier {
   final OnboardingModel _content = OnboardingModel(
@@ -12,6 +13,9 @@ class OnboardingViewModel extends ChangeNotifier {
   OnboardingModel get content => _content;
 
   void startApp(BuildContext context) {
-    print("Next Page එකට යනවා...");
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
   }
 }

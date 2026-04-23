@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/product_model.dart';
 
 class ProductViewModel extends ChangeNotifier {
-  // Dummy Data (පසුව මෙය API එකකින් ගන්න පුළුවන්)
   final Product _product = Product(
     name: "Modern Girl's Blazer",
     brand: "TrendyTrinkets Boutique",
@@ -23,11 +22,10 @@ class ProductViewModel extends ChangeNotifier {
 
   void selectSize(String size) {
     _selectedSize = size;
-    notifyListeners(); // UI එකට වෙනස දැනුම් දෙනවා
+    notifyListeners();
   }
 
   void addToCart() {
     print("${_product.name} - Size: $_selectedSize added to cart!");
-    // මෙතනට cart logic එක දාන්න පුළුවන්
   }
 }

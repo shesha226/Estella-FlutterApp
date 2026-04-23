@@ -37,7 +37,6 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 120),
 
-                  // Fields ටික
                   _buildTextField(Icons.person, 'Full Name'),
                   const SizedBox(height: 30),
                   _buildTextField(Icons.email, 'Email'),

@@ -1,7 +1,5 @@
-import 'package:estella/views/home_screen.dart';
 import 'package:flutter/material.dart';
-import '../models/login_model.dart';
-import '../views/login_screen.dart';
+import '../views/home_screen.dart';
 
 class LoginViewModel extends ChangeNotifier {
   bool _isPasswordObscure = true;
@@ -15,7 +13,7 @@ class LoginViewModel extends ChangeNotifier {
   void login(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => HomeScreen()),
     );
   }
 }

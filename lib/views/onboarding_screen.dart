@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/onboarding_view_model.dart';
-import 'login_screen.dart'; // LoginScreen එක තියෙන තැන හරියට import කරගන්න
+import 'login_screen.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Provider එකෙන් ViewModel එක ගන්නවා
     final viewModel = Provider.of<OnboardingViewModel>(context);
 
     return Scaffold(
@@ -66,8 +65,6 @@ class OnboardingView extends StatelessWidget {
                     // GET STARTED BUTTON
                     GestureDetector(
                       onTap: () {
-                        // මෙන්න මෙතන තමයි මැජික් එක වෙන්නේ!
-                        // ViewModel එකට යන්නේ නැතුව කෙලින්ම Navigate කරමු
                         Navigator.push(
                           context,
                           MaterialPageRoute(

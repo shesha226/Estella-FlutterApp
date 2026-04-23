@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../viewmodels/home_view_model.dart';
 import 'product_detail_view.dart';
+import 'cartScreen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +42,10 @@ class HomeScreen extends StatelessWidget {
         ),
         body: Consumer<HomeViewModel>(
           builder: (context, viewModel, child) {
+            if (viewModel.products.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -85,7 +90,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                     itemBuilder: (context, index) {
                       final item = viewModel.products[index];
-                      // --- මෙතන තමයි Click එක වෙන්නේ ---
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -105,7 +109,7 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-        bottomNavigationBar: _buildBottomNav(),
+        bottomNavigationBar: _buildBottomNav(context),
       ),
     );
   }
@@ -150,13 +154,25 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildBottomNav(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: 0, // දැනට Home නිසා 0 තියෙන්න ඕනේ
       type: BottomNavigationBarType.fixed,
       selectedItemColor: const Color(0xFFEB0000),
       unselectedItemColor: Colors.black45,
       showSelectedLabels: false,
       showUnselectedLabels: false,
+      onTap: (index) {
+        if (index == 0) {
+        } else if (index == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartScreen()),
+          );
+        } else if (index == 4) {
+          print("Profile Clicked");
+        }
+      },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: ""),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: ""),

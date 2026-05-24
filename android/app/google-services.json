@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182986357178",
+    "project_id": "estella-flutterapp",
+    "storage_bucket": "estella-flutterapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182986357178:android:da60485eff5effce3bc583",
+        "android_client_info": {
+          "package_name": "com.example.estella"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGC5r7-3Ik4caTHU4KJCKVENmbAUPP44A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -27,7 +27,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 Container(color: Colors.black.withValues(alpha: 0.3)),
-
                 Padding(
                   padding: const EdgeInsets.all(32.0),
                   child: Column(
@@ -42,16 +41,29 @@ class LoginScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       const SizedBox(height: 250),
-                      _buildTextField(Icons.person, 'Username', false),
+
+                      _buildTextField(
+                        viewModel.emailController,
+                        Icons.email,
+                        'Email',
+                        false,
+                      ),
                       const SizedBox(height: 30),
-                      _buildPasswordField(viewModel, 'Password'),
+
+                      _buildPasswordField(
+                        viewModel.passwordController,
+                        viewModel,
+                        'Password',
+                      ),
                       const SizedBox(height: 20),
+
                       _buildRememberMeRow(),
                       const SizedBox(height: 20),
+
                       _buildLogingButton(context, viewModel),
                       const SizedBox(height: 20),
+
                       _buildSignupLink(context),
                     ],
                   ),
@@ -64,8 +76,14 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(IconData icon, String hint, bool obscure) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    IconData icon,
+    String hint,
+    bool obscure,
+  ) {
     return TextField(
+      controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
@@ -77,8 +95,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordField(LoginViewModel viewModel, String hint) {
+  Widget _buildPasswordField(
+    TextEditingController controller,
+    LoginViewModel viewModel,
+    String hint,
+  ) {
     return TextField(
+      controller: controller,
       obscureText: viewModel.isPasswordObscure,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.lock),
@@ -86,7 +109,6 @@ class LoginScreen extends StatelessWidget {
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.8),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-
         suffixIcon: IconButton(
           icon: Icon(
             viewModel.isPasswordObscure

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../viewmodels/home_view_model.dart';
 import 'product_detail_view.dart';
 import 'cartScreen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => HomeViewModel()..fetchHomeData(),
+      create: (_) => HomeViewModel()..fetchProducts(),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
         appBar: AppBar(
@@ -20,14 +21,21 @@ class HomeScreen extends StatelessWidget {
           leadingWidth: 150,
           leading: Padding(
             padding: const EdgeInsets.only(left: 20, top: 15),
-            child: Text(
-              "ESTELLA",
-              style: GoogleFonts.playfairDisplay(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                letterSpacing: 1.5,
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "ESTELLA",
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.playfairDisplay(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           actions: [
@@ -42,8 +50,14 @@ class HomeScreen extends StatelessWidget {
         ),
         body: Consumer<HomeViewModel>(
           builder: (context, viewModel, child) {
-            if (viewModel.products.isEmpty) {
+            if (viewModel.isLoading) {
               return const Center(child: CircularProgressIndicator());
+            }
+
+            if (viewModel.products.isEmpty) {
+              return const Center(
+                child: Text("No products found in Firebase."),
+              );
             }
 
             return SingleChildScrollView(
@@ -123,11 +137,41 @@ class HomeScreen extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  item.imagePath,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
+                child: item.imagePath.startsWith('http')
+                    ? Image.network(
+                        item.imagePath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            color: Colors.grey[200],
+                            child: const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.black45,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        item.imagePath.contains('assets/')
+                            ? item.imagePath
+                            : 'assets/${item.imagePath}',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
               ),
               const Positioned(
                 right: 10,
@@ -144,10 +188,12 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           item.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 14),
         ),
         Text(
-          item.price,
+          item.price.toString(),
           style: GoogleFonts.poppins(color: Colors.black54, fontSize: 13),
         ),
       ],
@@ -156,21 +202,25 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildBottomNav(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: 0, // දැනට Home නිසා 0 තියෙන්න ඕනේ
+      currentIndex: 0,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: const Color(0xFFEB0000),
       unselectedItemColor: Colors.black45,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       onTap: (index) {
-        if (index == 0) {
-        } else if (index == 2) {
+        if (index == 2) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CartScreen()),
+            MaterialPageRoute(builder: (context) => const CartScreen()),
           );
-        } else if (index == 4) {
-          print("Profile Clicked");
+        }
+
+        if (index == 4) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
         }
       },
       items: const [
@@ -181,7 +231,10 @@ class HomeScreen extends StatelessWidget {
           label: "",
         ),
         BottomNavigationBarItem(icon: Icon(Icons.favorite_outline), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          label: "",
+        ), // 👈 Index 4
       ],
     );
   }

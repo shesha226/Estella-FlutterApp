@@ -1,49 +1,33 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/home_model.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  List<ProductModel> _products = [];
-  List<ProductModel> get products => _products;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void fetchHomeData() {
-    _products = [
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$50.00",
-        imagePath: "assets/images/dress1.png",
-      ),
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$50.00",
-        imagePath: "assets/images/dress1.png",
-      ),
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$50.00",
-        imagePath: "assets/images/dress1.png",
-      ),
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$80.00",
-        imagePath: "assets/images/Gemini_Generated_Image_556xtz556xtz556x.png",
-      ),
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$70.00",
-        imagePath: "assets/images/dress3.png",
-      ),
-      ProductModel(
-        title: "Floral Midi Dress",
-        description: "A chic floral midi dress perfect for spring.",
-        price: "\$90.00",
-        imagePath: "assets/images/dress4.png",
-      ),
-    ];
+  List<ProductModel> _products = [];
+  bool _isLoading = false;
+
+  List<ProductModel> get products => _products;
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchProducts() async {
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('products')
+          .get();
+
+      _products = querySnapshot.docs.map((doc) {
+        return ProductModel.fromFirestore(doc.data() as Map<String, dynamic>);
+      }).toList();
+    } catch (e) {
+      print("Error fetching products: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

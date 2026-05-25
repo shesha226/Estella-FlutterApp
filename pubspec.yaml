@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.1.5+1
   google_fonts: ^8.0.2
   firebase_core: ^4.9.0
+  firebase_auth: ^6.5.1
+  cloud_firestore: ^6.4.1
 
 dev_dependencies:
   flutter_test:
@@ -54,10 +56,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  uses-material-design: true
-
+  uses-material-design: true  # 🌟 මේක අනිවාර්යයෙන්ම true වෙන්න ඕනේ!
+  
   assets:
-    - assets/images/Gemini_Generated_Image_556xtz556xtz556x.png
+    - assets/images/ # 👈 Spaces 4ක් තියෙන්න ඕනේ. මෙහෙම දුන්නම ෆෝල්ඩරේ තියෙන හැම image එකක්ම ගන්නවා!
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

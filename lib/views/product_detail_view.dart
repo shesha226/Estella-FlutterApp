@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/home_model.dart';
+import '../viewmodels/cart_view_model.dart';
+import 'cartScreen.dart';
 
 class ProductDetailView extends StatelessWidget {
   final ProductModel product;
@@ -24,10 +27,43 @@ class ProductDetailView extends StatelessWidget {
                     margin: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      image: DecorationImage(
-                        image: AssetImage(product.imagePath),
-                        fit: BoxFit.cover,
-                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: product.imagePath.startsWith('http')
+                          ? Image.network(
+                              product.imagePath,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              product.imagePath.contains('assets/')
+                                  ? product.imagePath
+                                  : 'assets/${product.imagePath}',
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   Positioned(
@@ -161,7 +197,34 @@ class ProductDetailView extends StatelessWidget {
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Provider.of<CartViewModel>(
+                          context,
+                          listen: false,
+                        ).addToCart(product);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "${product.title} added to cart & Firebase!",
+                            ),
+                            backgroundColor: const Color(0xFFEB0000),
+                            duration: const Duration(seconds: 2),
+                            action: SnackBarAction(
+                              label: "VIEW CART",
+                              textColor: Colors.white,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CartScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFEB0000),
                         padding: const EdgeInsets.symmetric(
